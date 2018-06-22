@@ -10,7 +10,7 @@ module.exports = function(grunt) {
               height: 240
             },{
               name: 'large',
-              width: 640
+              width: 1080
             },{
               width: 1600,
               suffix: '_large_2x',

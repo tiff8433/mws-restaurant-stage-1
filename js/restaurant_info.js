@@ -94,7 +94,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.src = `${pathPrefix}-large.jpg`;
   
   const smSrc = document.createElement('source');
-  smSrc.media = '(min-width: 450px)';
+  smSrc.media = '(max-width: 450px)';
   smSrc.srcset = `${pathPrefix}-320x240.jpg`;
   
   
