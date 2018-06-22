@@ -167,12 +167,12 @@ createRestaurantHTML = (restaurant) => {
   image.src = `${pathPrefix}-large.jpg`;
   
   const smSrc = document.createElement('source');
-  smSrc.media = '(min-width: 450px)';
-  smSrc.srcset = `${pathPrefix}-large.jpg, ${pathPrefix}-1600_large_2x.jpg 2x`;
+  smSrc.media = '(max-width: 450px)';
+  smSrc.srcset = `${pathPrefix}-320x240.jpg`;
   
   
   const lgSrc = document.createElement('source');
-  lgSrc.media = '(min-width: 750px)';
+  lgSrc.media = '(min-width: 751px)';
   lgSrc.srcset = `${pathPrefix}-large.jpg, ${pathPrefix}-1600_large_2x.jpg 2x`;
   
   image.alt = smSrc.alt = lgSrc.alt = restaurant.name;
