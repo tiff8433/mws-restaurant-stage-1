@@ -32,6 +32,7 @@ fetchNeighborhoods = () => {
  */
 fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
   const select = document.getElementById('neighborhoods-select');
+  select.setAttribute('aria-label', "neighborhood select");
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
@@ -59,6 +60,7 @@ fetchCuisines = () => {
  */
 fillCuisinesHTML = (cuisines = self.cuisines) => {
   const select = document.getElementById('cuisines-select');
+  select.setAttribute('aria-label', "cuisines select");
 
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
@@ -156,8 +158,11 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
-  const div = document.createElement('div');
-  div.classList.add("restaurant-element");
+  const divWrapper = document.createElement('div');
+  divWrapper.classList.add("restaurant-element");
+
+  const div = document.createElement('a')
+  divWrapper.append(div);
 
   const picture = document.createElement('picture');
   
@@ -194,12 +199,12 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   div.append(address);
 
-  const more = document.createElement('a');
-  more.innerHTML = 'View Details';
-  more.href = DBHelper.urlForRestaurant(restaurant);
-  div.append(more)
+  // const more = document.createElement('a');
+  // more.innerHTML = 'View Details';
+  div.href = DBHelper.urlForRestaurant(restaurant);
+  // div.append(more)
 
-  return div
+  return divWrapper;
 }
 
 /**

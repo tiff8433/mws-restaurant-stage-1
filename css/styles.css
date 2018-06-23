@@ -45,7 +45,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   flex-direction: column; 
 }
 #footer {
-  background-color: #444;
+  background-color: #142338;
   color: #aaa;
   font-size: 8pt;
   letter-spacing: 1px;
@@ -96,7 +96,7 @@ nav h1 a {
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-    color: #0275d8;
+    color: #005096;
     text-decoration: none;
 }
 
@@ -203,6 +203,11 @@ nav h1 a {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+#restaurants-list .restaurant-element a {
+  color: #ED1227;
+  font-weight: 500;
 }
 
 /* ====================== Restaurant Details ====================== */
