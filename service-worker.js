@@ -1,3 +1,4 @@
+// from https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/
 const CACHE_VERSION = "mws-apps-v2";
 let CACHE_FILES = [
     "/",
