@@ -9,6 +9,7 @@ const dbPromise = idb.open('db', 1, (upgradeDb) => {
     }
 });
 
+// from https://github.com/jakearchibald/idb
 const idbHelper = {
     get(dbName, key) {
         return dbPromise.then(db => {
@@ -53,52 +54,3 @@ const idbHelper = {
         })
     }
 };
-
-
-// get a value
-// dbPromise.then((db) => {
-//     const tx = db.transaction('restaurant');
-//     const restaurantStore = tx.objectStore('restaurant');
-//     return restaurantStore.get('rest');
-// }).then((val) => {
-//     console.log('The value of "rest" is", val');
-// });
-
-// set a value
-// dbPromise.then((db) => {
-//     const tx = db.transaction('restaurant', 'readwrite');
-//     const restaurantStore = tx.objectStore('restaurant');
-//     restaurantStore.put('restaurant_id', 'restaurant_obj');
-//     return tx.complete;
-// }).then((val) => {
-//     console.log('Added restaurant_obj to restaurant_id');
-// });
-
-// return all
-// dbPromise.then((db) => {
-//     const tx = db.transaaction('restaurant');
-//     const restStore = tx.objectStore('restaurant');
-//     const neighborhoodIdx = restStore.index('neighborhood');
-//     return neighborhoodIdx.getAll();
-// }).then((restaurants) => {
-//     console.log('indexed by neighborhood', restaurants);
-// });
-
-
-// // iterate through list
-// dbPromise.then((db) => {
-//     const tx = db.transaaction('restaurant');
-//     const restStore = tx.objectStore('restaurant');
-//     const neighborhoodIdx = restStore.index('neighborhood');
-//     return neighborhoodIdx.openCursor();
-// }).then(function logRestaurant(cursor) {
-//     if (!cursor) return;
-//     console.log('cursored at:', cursor.value.name);
-
-//     // update: cursor.update
-//     // delete: cursor.delete
-//     // skip: cursor.advance(numtoAdvance)
-//     return cursor.continue().then(logRestaurant);
-// }).then(() => {
-//     console.log('done cursoring');
-// });
