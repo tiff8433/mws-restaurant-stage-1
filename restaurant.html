@@ -46,6 +46,25 @@
       <div id="map"></div>
     </section>
     <!-- End map -->
+    <section id="review-form">
+      <form method="POST">
+        <div>
+          <label for="name">
+            Name: <input type="text" id="name" name="name">
+          </label>
+        </div>
+        <div>
+          <label for="rating">
+            Rating: <input type="number" id="rating" name="rating" placeholder="0 to 5" min="0" max="5">
+          </label>
+        </div>
+        <div>
+          <label for="comments">Comments:</label>
+          <textarea id="comments" name="comments"></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <ul id="reviews-list"></ul>

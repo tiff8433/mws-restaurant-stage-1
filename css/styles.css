@@ -314,3 +314,7 @@ nav h1 a {
 	top: 0;
 }
 
+#review-form form div {
+  margin: 15px 0px;
+}
+
