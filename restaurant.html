@@ -47,7 +47,7 @@
     </section>
     <!-- End map -->
     <section id="review-form">
-      <form method="POST">
+      <form action="http://localhost:1337/reviews/" method="post">
         <div>
           <label for="name">
             Name: <input type="text" id="name" name="name">
@@ -62,7 +62,8 @@
           <label for="comments">Comments:</label>
           <textarea id="comments" name="comments"></textarea>
         </div>
-        <button type="submit">Submit</button>
+        <input type="hidden" name="restaurant_id" id="restaurant-id-input">
+        <input type="submit" value="Submit">
       </form>
     </section>
     <!-- Beginning reviews -->

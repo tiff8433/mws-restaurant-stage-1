@@ -33,7 +33,11 @@ initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
-}  
+}
+
+setRestaurantId = () => {
+
+}
  
 /* window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
@@ -110,6 +114,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+
+  // set restaurant id on form
+  const restaurantIdElem = document.getElementById('restaurant-id-input');
+  restaurantIdElem.value = restaurant.id;
 
   // fill operating hours
   if (restaurant.operating_hours) {
