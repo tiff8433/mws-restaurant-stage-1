@@ -20,19 +20,34 @@ class DBHelper {
   /**
    * Submit a review
    */
-  static submitReview(callback) {
+  static submitReview(payload, callback) {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.REVIEWS_URL);
+    xhr.open('POST', DBHelper.REVIEWS_URL, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+
     xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const response = JSON.parse(xhr.responseText);
-        callback(null, response);
+      if (xhr.status === 201) { // Got a success response from server!
+        const resp = JSON.parse(xhr.responseText);
+        console.log('everything is ok')
+        callback(null, resp)
+        
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
         callback(error, null);
       }
     };
-    xhr.send();
+    
+    xhr.send(JSON.stringify(payload));
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+          const response = JSON.parse(xhr.responseText);
+          callback(null, response);
+      } else {
+        const error = (`Request failed. Returned status of ${xhr.status}`);
+        callback(error, null);
+      }
+  }
   }
 
   /**

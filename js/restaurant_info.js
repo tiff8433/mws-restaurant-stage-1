@@ -213,5 +213,19 @@ submitReview = () => {
   const name = document.getElementById('name').value;
   const rating = document.getElementById('rating').value;
   const comments = document.getElementById('comments').value;
+  const payload = {
+    restaurant_id: restaurantId,
+    name,
+    rating,
+    comments
+  };
   console.log('save review', restaurantId, name, rating, comments);
+  DBHelper.submitReview(payload, (err, resp) => {
+    if (err) {
+      console.log('error submitting review', err);
+    } else {
+      console.log('review sent!!', resp);
+    }
+  });
+
 };
