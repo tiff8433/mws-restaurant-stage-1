@@ -68,6 +68,14 @@ fetchRestaurantFromURL = (callback) => {
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  const fave = document.getElementById('favorite-icon');
+  if (self.restaurant.is_favorite) {
+    fave.innerHTML = "&#9829";
+    fave.classList.add("is_fave");
+  } else {
+    fave.innerHTML = "&#9825"
+    fave.classList.add("is_not_fave");
+  }
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
@@ -222,8 +230,7 @@ submitReview = () => {
   console.log('save review', restaurantId, name, rating, comments);
   DBHelper.submitReview(payload, (err, resp) => {
     if (err) {
-      console.log('error submitting review', err);
-      console.log('NEED to send to indexDB queue', payload);
+      console.log('send review to idb', err);
       idbHelper.set('offline', Date.now(), payload);
     } else {
       console.log('review sent!!', resp);
@@ -231,3 +238,25 @@ submitReview = () => {
   });
 
 };
+
+toggleFave = () => {
+  console.log('toggleFave', self.restaurant.is_favorite);
+  self.restaurant.is_favorite = !self.restaurant.is_favorite;
+  DBHelper.toggleFavorite(self.restaurant.id, self.restaurant.is_favorite, (err, resp) => {
+    if (err) {
+      console.log('error favoriting restaurant');
+    } else {
+      console.log('toggleFave success', resp);
+      const fave = document.getElementById('favorite-icon');
+      if (self.restaurant.is_favorite) {
+        fave.innerHTML = "&#9829";
+        fave.classList.add("is_fave");
+        fave.classList.remove("is_not_fave");
+      } else {
+        fave.innerHTML = "&#9825"
+        fave.classList.add("is_not_fave");
+        fave.classList.remove("is_fave");
+      }
+    }
+  });
+}

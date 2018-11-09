@@ -29,7 +29,6 @@ class DBHelper {
     xhr.onload = () => {
       if (xhr.status === 201) { // Got a success response from server!
         const resp = JSON.parse(xhr.responseText);
-        console.log('everything is ok')
         callback(null, resp)
         
       } else { // Oops!. Got an error from server.
@@ -47,7 +46,26 @@ class DBHelper {
         const error = (`Request failed. Returned status of ${xhr.status}`);
         callback(error, null);
       }
+    }
   }
+
+  static toggleFavorite(restaurantId, isFavorite, callback) {
+    const url = `${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`;
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', url, true);
+    xhr.onload = () => {
+      console.log('====status', xhr.status);
+      if (xhr.status === 200) { // Got a success response from server!
+        const resp = JSON.parse(xhr.responseText);
+        console.log('favorited')
+        callback(null, resp)
+        
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${xhr.status}`);
+        callback(error, null);
+      }
+    };
+    xhr.send();
   }
 
   /**
