@@ -1,15 +1,20 @@
 // set up db store
-const dbPromise = idb.open('db', 1, (upgradeDb) => {
-    console.log('creating dbPromise');
+const dbPromise = idb.open('db', 3, (upgradeDb) => {
+    console.log('creating dbPromise', upgradeDb);
     switch(upgradeDb.oldVersion) {
+        case 0:
+            const restaurantStore = upgradeDb.createObjectStore('restaurant', {
+                keyPath: "id"
+            });
+            restaurantStore.createIndex('name', 'name');
         case 1:
-            const restaurantStore = upgradeDb.createObjectStore('restaurant');
-            restaurantStore.createIndex('name');
+            const reviewStore = upgradeDb.createObjectStore('reviews', {
+                keyPath: "id"
+            });
         case 2:
-            const reviewStore = ugradeDb.createObjectStore('reviews');
-            reviewStore.createIndex("restaurant_id");
-        case 3:
-            const offlineStore = upgradeDb.createObjectStore('offline');
+            const offlineStore = upgradeDb.createObjectStore('offline', {
+                autoIncrement: true
+            });
 
     }
 });
@@ -37,7 +42,7 @@ const idbHelper = {
             return tx.complete;
         });
     },
-    clear() {
+    clear(dbName) {
         return dbPromise.then(db => {
             const tx = db.transaction(dbName, 'readwrite');
             tx.objectStore(dbName).clear();

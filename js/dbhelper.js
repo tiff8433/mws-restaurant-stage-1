@@ -40,7 +40,7 @@ class DBHelper {
     
     xhr.send(JSON.stringify(payload));
     xhr.onreadystatechange = function () {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
+      if (xhr.status !== 0 && xhr.readyState == XMLHttpRequest.DONE) {
           const response = JSON.parse(xhr.responseText);
           callback(null, response);
       } else {

@@ -223,6 +223,8 @@ submitReview = () => {
   DBHelper.submitReview(payload, (err, resp) => {
     if (err) {
       console.log('error submitting review', err);
+      console.log('NEED to send to indexDB queue', payload);
+      idbHelper.set('offline', Date.now(), payload);
     } else {
       console.log('review sent!!', resp);
     }
