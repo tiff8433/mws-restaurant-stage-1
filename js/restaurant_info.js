@@ -34,10 +34,6 @@ initMap = () => {
     }
   });
 }
-
-setRestaurantId = () => {
-
-}
  
 /* window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
@@ -123,8 +119,15 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+
+  DBHelper.fetchReviewsForRestaurant(restaurant.id, (err, resp) => {
+    if (err) {
+      console.log('error fetching reviews', err);
+    } else {
+      console.log('got reviews for rest id', restaurant.id, '-->', resp);
+      fillReviewsHTML(resp);
+    }
+  });
 }
 
 /**
@@ -178,9 +181,9 @@ createReviewHTML = (review) => {
   name.innerHTML = review.name;
   li.appendChild(name);
 
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  li.appendChild(date);
+  // const date = document.createElement('p');
+  // date.innerHTML = review.date;
+  // li.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;

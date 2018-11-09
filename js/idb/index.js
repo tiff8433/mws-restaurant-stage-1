@@ -5,6 +5,11 @@ const dbPromise = idb.open('db', 1, (upgradeDb) => {
         case 1:
             const restaurantStore = upgradeDb.createObjectStore('restaurant');
             restaurantStore.createIndex('name');
+        case 2:
+            const reviewStore = ugradeDb.createObjectStore('reviews');
+            reviewStore.createIndex("restaurant_id");
+        case 3:
+            const offlineStore = upgradeDb.createObjectStore('offline');
 
     }
 });

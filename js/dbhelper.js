@@ -36,6 +36,24 @@ class DBHelper {
   }
 
   /**
+   * Fetch a restaurant's reviews
+   */
+  static fetchReviewsForRestaurant(restaurantId, callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', `${DBHelper.REVIEWS_URL}/?restaurant_id=${restaurantId}`);
+    xhr.onload = () => {
+      if (xhr.status === 200) { // Got a success response from server!
+        const response = JSON.parse(xhr.responseText);
+        callback(null, response);
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${xhr.status}`);
+        callback(error, null);
+      }
+    };
+    xhr.send();
+  }
+
+  /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
