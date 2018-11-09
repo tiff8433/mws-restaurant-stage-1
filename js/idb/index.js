@@ -49,7 +49,8 @@ const idbHelper = {
             return tx.complete;
         });
     },
-    keys() {
+    keys(dbName) {
+        console.log({dbName});
         return dbPromise.then(db => {
             const tx = db.transaction(dbName);
             const keys = [];

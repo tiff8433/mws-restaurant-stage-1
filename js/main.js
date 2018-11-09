@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added 
   fetchNeighborhoods();
   fetchCuisines();
+  submitOfflineReviews();
 });
 
 /**
@@ -233,3 +234,23 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 } */
 
+submitOfflineReviews = () => {
+  idbHelper.keys('offline').then((keys) => {
+    console.log({keys});
+    keys.forEach((key) => {
+      const payload = idbHelper.get('offline', key).then(payload => {
+        DBHelper.submitReview(payload, (err, resp) => {
+          if (err) {
+            console.log('error submitting offline review')
+          } else {
+            console.log('success saving offline review', resp);
+            idbHelper.delete('offline', key).then(() => {
+              console.log('key deleted');
+            });
+          }
+        });
+
+      });
+    })
+  })
+}
