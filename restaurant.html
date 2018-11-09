@@ -48,7 +48,7 @@
     <!-- End map -->
     <section id="review-form" aria-label="reivew form">
       <h3>Submit a Review</h3>
-      <form action="http://localhost:1337/reviews/" method="post">
+      <section id="review-form">
         <div>
           <label for="name">
             Name: <input type="text" id="name" name="name">
@@ -64,8 +64,8 @@
           <textarea id="comments" name="comments"></textarea>
         </div>
         <input type="hidden" name="restaurant_id" id="restaurant-id-input">
-        <input type="submit" value="Submit">
-      </form>
+        <button onclick="submitReview()">Submit Review</button>
+      </section>
     </section>
     <!-- Beginning reviews -->
     <section id="reviews-container">

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
 
+
 /**
  * Initialize leaflet map
  */
@@ -34,22 +35,7 @@ initMap = () => {
     }
   });
 }
- 
-/* window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    }
-  });
-} */
+
 
 /**
  * Get current restaurant from page URL.
@@ -221,3 +207,11 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+submitReview = () => {
+  const restaurantId = self.restaurant.id;
+  const name = document.getElementById('name').value;
+  const rating = document.getElementById('rating').value;
+  const comments = document.getElementById('comments').value;
+  console.log('save review', restaurantId, name, rating, comments);
+};
