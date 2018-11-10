@@ -38,15 +38,6 @@ class DBHelper {
     };
     
     xhr.send(JSON.stringify(payload));
-    xhr.onreadystatechange = function () {
-      if (xhr.status !== 0 && xhr.readyState == XMLHttpRequest.DONE) {
-          const response = JSON.parse(xhr.responseText);
-          callback(null, response);
-      } else {
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    }
   }
 
   static toggleFavorite(restaurantId, isFavorite, callback) {
@@ -77,6 +68,7 @@ class DBHelper {
     xhr.onload = () => {
       if (xhr.status === 200) { // Got a success response from server!
         const response = JSON.parse(xhr.responseText);
+        idbHelper.set('reviews', restaurantId, response);
         callback(null, response);
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
@@ -95,6 +87,10 @@ class DBHelper {
     xhr.onload = () => {
       if (xhr.status === 200) { // Got a success response from server!
         const restaurants = JSON.parse(xhr.responseText);
+        // store in indexdb
+        restaurants.forEach((r) => {
+          idbHelper.set('restaurant', r.id, r);
+        });
         callback(null, restaurants);
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
@@ -115,6 +111,7 @@ class DBHelper {
       } else {
         const restaurant = restaurants.find(r => r.id == id);
         if (restaurant) { // Got the restaurant
+          idbHelper.set('restaurant', restaurant.id, restaurant);
           callback(null, restaurant);
         } else { // Restaurant does not exist in the database
           callback('Restaurant does not exist', null);
