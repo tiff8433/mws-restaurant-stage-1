@@ -268,19 +268,21 @@ toggleFave = () => {
 
 submitOfflineReviews = () => {
   idbHelper.keys('offline').then((keys) => {
+    console.log({keys});
     keys.forEach((key) => {
-      const payload = idbHelper.get('offline', key).then(payload => {
-        DBHelper.submitReview(payload, (err, resp) => {
-          if (err) {
-            console.log('error submitting offline review')
-          } else {
-            console.log('success saving offline review', resp);
-            idbHelper.delete('offline', key).then(() => {
-              console.log('key deleted');
-            });
-          }
-        });
+      dbPromise.then(db => {
+        return db.transaction('offline')
+          .objectStore('offline').get(key);
+      }).then(obj => {
+        console.log('success saving offline review', obj);
+        DBHelper.submitReview(obj, () => {
 
+          idbHelper.delete('offline', key).then(() => {
+            console.log('key deleted');
+          });
+        })
+      }).catch(err => {
+        console.log('error submitting offline review', err);
       });
     })
   })
