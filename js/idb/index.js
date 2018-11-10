@@ -8,13 +8,9 @@ const dbPromise = idb.open('db', 3, (upgradeDb) => {
             });
             restaurantStore.createIndex('name', 'name');
         case 1:
-            const reviewStore = upgradeDb.createObjectStore('reviews', {
-                keyPath: "id"
-            });
+            const reviewStore = upgradeDb.createObjectStore('reviews');
         case 2:
-            const offlineStore = upgradeDb.createObjectStore('offline', {
-                autoIncrement: true
-            });
+            const offlineStore = upgradeDb.createObjectStore('offline');
 
     }
 });
@@ -29,9 +25,14 @@ const idbHelper = {
     },
     set(dbName, key, val) {
         return dbPromise.then(db => {
-            console.log('SETTING', key, val.name, 'on', db);
+            console.log('SETTING', key, 'on', dbName);
             const tx = db.transaction(dbName, 'readwrite');
-            tx.objectStore(dbName).put(val, key);
+            if (dbName !== "restaurant") {
+                tx.objectStore(dbName).put(val, key);
+            }
+            else {
+                tx.objectStore(dbName).put(val);
+            }
             return tx.complete;
         });
     },

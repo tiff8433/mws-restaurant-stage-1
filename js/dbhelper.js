@@ -29,7 +29,17 @@ class DBHelper {
     xhr.onload = () => {
       if (xhr.status === 201) { // Got a success response from server!
         const resp = JSON.parse(xhr.responseText);
-        callback(null, resp)
+        callback(null, resp);
+
+        // push review to indexdb
+        dbPromise.then(db => {
+          return db.transaction('reviews')
+            .objectStore('restaurant').get(payload.restaurant_id);
+        }).then(obj => {
+          const reviews = obj;
+          reviews.push(resp);
+          idbHelper.set('reviews', payload.restaurant_id, reviews);
+        });
         
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
@@ -45,11 +55,19 @@ class DBHelper {
     let xhr = new XMLHttpRequest();
     xhr.open('PUT', url, true);
     xhr.onload = () => {
-      console.log('====status', xhr.status);
       if (xhr.status === 200) { // Got a success response from server!
         const resp = JSON.parse(xhr.responseText);
-        console.log('favorited')
+        console.log('favorited');
         callback(null, resp)
+
+        dbPromise.then(db => {
+          return db.transaction('restaurant')
+            .objectStore('restaurant').get(resp.id);
+        }).then(obj => {
+          const updatedRestaurant = obj;
+          updatedRestaurant.is_favorite = isFavorite;
+          idbHelper.set('restaurant', resp.name, updatedRestaurant);
+        });
         
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
@@ -89,7 +107,7 @@ class DBHelper {
         const restaurants = JSON.parse(xhr.responseText);
         // store in indexdb
         restaurants.forEach((r) => {
-          idbHelper.set('restaurant', r.id, r);
+          idbHelper.set('restaurant', null, r);
         });
         callback(null, restaurants);
       } else { // Oops!. Got an error from server.
