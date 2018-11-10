@@ -30,11 +30,12 @@ class DBHelper {
       if (xhr.status === 201) { // Got a success response from server!
         const resp = JSON.parse(xhr.responseText);
         callback(null, resp);
+        console.log('submit review', {resp, payload});
 
         // push review to indexdb
         dbPromise.then(db => {
           return db.transaction('reviews')
-            .objectStore('restaurant').get(payload.restaurant_id);
+            .objectStore('reviews').get(payload.restaurant_id);
         }).then(obj => {
           const reviews = obj;
           reviews.push(resp);
@@ -57,7 +58,6 @@ class DBHelper {
     xhr.onload = () => {
       if (xhr.status === 200) { // Got a success response from server!
         const resp = JSON.parse(xhr.responseText);
-        console.log('favorited');
         callback(null, resp)
 
         dbPromise.then(db => {
@@ -119,23 +119,25 @@ class DBHelper {
   }
 
   /**
-   * Fetch a restaurant by its ID.
+   * Fetch a restaurant by its ID
+   * http://localhost:1337/restaurants/<restaurant_id>
    */
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', `${DBHelper.DATABASE_URL}/${id}`);
+    xhr.onload = () => {
+      if (xhr.status === 200) { // Got a success response from server!
+        const restaurant = JSON.parse(xhr.responseText);
+        // store in indexdb
+        idbHelper.set('restaurant', restaurant.id, restaurant);
+        callback(null, restaurant);
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${xhr.status}`);
         callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          idbHelper.set('restaurant', restaurant.id, restaurant);
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
       }
-    });
+    };
+    xhr.send();
   }
 
   /**

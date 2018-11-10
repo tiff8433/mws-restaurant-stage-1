@@ -25,7 +25,6 @@ const idbHelper = {
     },
     set(dbName, key, val) {
         return dbPromise.then(db => {
-            console.log('SETTING', key, 'on', dbName);
             const tx = db.transaction(dbName, 'readwrite');
             if (dbName !== "restaurant") {
                 tx.objectStore(dbName).put(val, key);
@@ -51,7 +50,6 @@ const idbHelper = {
         });
     },
     keys(dbName) {
-        console.log({dbName});
         return dbPromise.then(db => {
             const tx = db.transaction(dbName);
             const keys = [];

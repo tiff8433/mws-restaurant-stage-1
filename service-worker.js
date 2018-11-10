@@ -52,28 +52,33 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    console.log('Fetch event for ', event.request.url);
+    // console.log('Fetch event for ', event.request.url);
     let req = event.request;
     if (event.request.url.includes("restaurant.html")) {
         const url = "restaurant.html";
         req = new Request(url);
     }
+
     event.respondWith(
       caches.match(event.request).then((response) => {
+        const isGetReq = req.url.includes('/restaurants') || req.url.includes('/reviews');
+        if (!response || isGetReq) {
+            // console.log('Network request for ', event.request.url);
+            return fetch(event.request).then((response) => {
+          
+                return caches.open(CACHE_VERSION).then((cache) => {
+                    if (event.request.url.indexOf('test') < 0) {
+                        cache.put(event.request.url, response.clone());
+                    }
+                    return response;
+                });
+          });
+        }
         if (response) {
-          console.log('Found ', event.request.url, ' in cache');
+        //   console.log('Found ', event.request.url, ' in cache');
           return response;
         }
-        console.log('Network request for ', event.request.url);
-        return fetch(event.request).then((response) => {
-          
-            return caches.open(CACHE_VERSION).then((cache) => {
-              if (event.request.url.indexOf('test') < 0) {
-                cache.put(event.request.url, response.clone());
-              }
-              return response;
-            });
-          });
+        
   
       }).catch((error) => {
         return new Response("Error page not found", {status: 404, statusText: "Error page not found"});

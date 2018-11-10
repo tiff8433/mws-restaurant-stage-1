@@ -6,6 +6,7 @@ var newMap;
  */
 document.addEventListener('DOMContentLoaded', (event) => {  
   initMap();
+  submitOfflineReviews();
 });
 
 
@@ -56,7 +57,7 @@ fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
-      fillRestaurantHTML();
+      fillRestaurantHTML(restaurant);
       callback(null, restaurant)
     });
   }
@@ -69,9 +70,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
   const fave = document.getElementById('favorite-icon');
-  if (self.restaurant.is_favorite) {
+  if (restaurant.is_favorite === "true") {
     fave.innerHTML = "&#9829";
-    fave.classList.add("is_fave");
+    fave.classList.add("is_fave", restaurant.is_favorite);
   } else {
     fave.innerHTML = "&#9825"
     fave.classList.add("is_not_fave");
@@ -227,28 +228,32 @@ submitReview = () => {
     rating,
     comments
   };
-  console.log('save review', restaurantId, name, rating, comments);
   DBHelper.submitReview(payload, (err, resp) => {
     if (err) {
       console.log('send review to idb', err);
       idbHelper.set('offline', Date.now(), payload);
     } else {
       console.log('review sent!!', resp);
+      const ul = document.getElementById('reviews-list');
+      ul.appendChild(createReviewHTML(resp));
     }
+
+    // clear inputs
+    document.getElementById('name').value = "";
+    document.getElementById('rating').value = 0;
+    document.getElementById('comments').value = "";
   });
 
 };
 
 toggleFave = () => {
-  console.log('toggleFave', self.restaurant.is_favorite);
-  self.restaurant.is_favorite = !self.restaurant.is_favorite;
+  self.restaurant.is_favorite = self.restaurant.is_favorite === "true" ? "false" : "true";
   DBHelper.toggleFavorite(self.restaurant.id, self.restaurant.is_favorite, (err, resp) => {
     if (err) {
-      console.log('error favoriting restaurant');
+      console.log('error favoriting restaurant', err);
     } else {
-      console.log('toggleFave success', resp);
       const fave = document.getElementById('favorite-icon');
-      if (self.restaurant.is_favorite) {
+      if (self.restaurant.is_favorite === "true") {
         fave.innerHTML = "&#9829";
         fave.classList.add("is_fave");
         fave.classList.remove("is_not_fave");
@@ -259,4 +264,24 @@ toggleFave = () => {
       }
     }
   });
+}
+
+submitOfflineReviews = () => {
+  idbHelper.keys('offline').then((keys) => {
+    keys.forEach((key) => {
+      const payload = idbHelper.get('offline', key).then(payload => {
+        DBHelper.submitReview(payload, (err, resp) => {
+          if (err) {
+            console.log('error submitting offline review')
+          } else {
+            console.log('success saving offline review', resp);
+            idbHelper.delete('offline', key).then(() => {
+              console.log('key deleted');
+            });
+          }
+        });
+
+      });
+    })
+  })
 }

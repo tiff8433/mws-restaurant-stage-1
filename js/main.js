@@ -236,7 +236,6 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 
 submitOfflineReviews = () => {
   idbHelper.keys('offline').then((keys) => {
-    console.log({keys});
     keys.forEach((key) => {
       const payload = idbHelper.get('offline', key).then(payload => {
         DBHelper.submitReview(payload, (err, resp) => {
